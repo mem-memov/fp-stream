@@ -2,6 +2,7 @@ import scala.collection.immutable.{AbstractSeq, LinearSeq}
 
 sealed trait Stream[+A]:
 
+  // TODO: not stack-safe
   def map[B](f: A => B): Stream[B] =
 
     this match
@@ -10,6 +11,7 @@ sealed trait Stream[+A]:
       case Cons(head, tail) =>
         Stream.cons(f(head()), tail().map(f))
 
+  // TODO: not stack-safe
   def take(n: Int): Stream[A] =
 
     if n <= 0 then
@@ -21,6 +23,7 @@ sealed trait Stream[+A]:
         case Cons(head, tail) =>
           Stream.cons(head(), tail().take(n - 1))
 
+  // TODO: not stack-safe
   def toList: List[A] =
 
     this match {
@@ -47,6 +50,7 @@ object Stream:
 
     Cons[A](() => lazyHead, () => lazyTail)
 
+  // TODO: not stack-safe
   def apply[A](as: A*): Stream[A] =
 
     if as.isEmpty then
