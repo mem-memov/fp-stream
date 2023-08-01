@@ -1,1 +1,1 @@
-# fp-stream
+practicing with Functional Programming in Scala
