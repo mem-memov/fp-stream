@@ -2,11 +2,20 @@ import scala.collection.immutable.{AbstractSeq, LinearSeq}
 
 sealed trait Stream[+A]:
 
+  def headOption: Option[A] =
+
+    this match
+      case empty: Empty =>
+        None
+      case Cons(head, _) =>
+        Some(head())
+
+
   // TODO: not stack-safe
   def map[B](f: A => B): Stream[B] =
 
     this match
-      case empty: Empty[_] =>
+      case empty: Empty =>
         empty
       case Cons(head, tail) =>
         Stream.cons(f(head()), tail().map(f))
@@ -18,7 +27,7 @@ sealed trait Stream[+A]:
       Stream.empty
     else
       this match
-        case empty: Empty[_] =>
+        case empty: Empty =>
           empty
         case Cons(head, tail) =>
           Stream.cons(head(), tail().take(n - 1))
@@ -27,21 +36,21 @@ sealed trait Stream[+A]:
   def toList: List[A] =
 
     this match {
-      case empty: Empty[_] =>
+      case empty: Empty =>
         Nil
       case Cons(head, tail) =>
         head() :: tail().toList
     }
 
 
-sealed class Empty[+A] extends Stream[Nothing]
+sealed class Empty extends Stream[Nothing]
 sealed case class Cons[+A](head: () => A, tail: () => Stream[A]) extends Stream[A]
 
 object Stream:
 
   def empty[A]: Stream[A] =
 
-    Empty[A]
+    new Empty
 
   def cons[A](h: => A, t: => Stream[A]): Stream[A] =
 

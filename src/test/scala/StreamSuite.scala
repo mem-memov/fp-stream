@@ -16,3 +16,20 @@ class StreamSuite extends munit.FunSuite:
 
     assert(headList == List(1, 2))
   }
+
+  test("Stream elements get evaluated once when mapped over") {
+
+    var count = 0
+
+    val list = Stream[Int](
+      { count += 1; 1},
+      2,
+      3
+    )
+      .map(_ + 10)
+      .map(_ + 100)
+      .toList
+
+    assert(count == 1)
+    assert(list == List(111, 112, 113))
+  }
